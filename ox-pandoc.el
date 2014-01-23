@@ -98,7 +98,10 @@ to expand the stack here."
             (lambda (a s v b) (org-pandoc-export-as-pandoc a s v)))
         (?p "To file"
             (lambda (a s v b) (org-pandoc-export-to-pandoc a s v)))))
-  :translate-alist '((template . org-pandoc-template))
+  :translate-alist '((template . org-pandoc-template)
+                     (table . org-pandoc-table)
+                     (table-cell . org-pandoc-table-cell)
+                     (table-row . org-pandoc-table-row))
   :options-alist '((:epub-rights "EPUB_RIGHTS" nil org-pandoc-epub-rights t)
                    (:epub-cover "EPUB_COVER" nil nil t)
                    (:epub-stylesheet "EPUB_STYLESHEET" nil org-pandoc-epub-stylesheet t)
@@ -164,6 +167,35 @@ to expand the stack here."
               (format "%% %s\n" (org-export-data date info)))
             "\n"
             contents)))
+
+(defun org-pandoc-table (table contents info)
+  (case (org-element-property :type table)
+    ;; Case 1: table.el table.  Convert it using appropriate tools.
+    (table.el (org-html-table--table.el-table table info))
+    ;; Case 2: Standard table.
+    (t
+     (let* ((label (org-element-property :name table))
+            (caption (org-export-get-caption table))
+            (column-format "|"))
+       (org-element-map
+           (org-element-map table 'table-row
+             (lambda (row)
+               (and (eq (org-element-property :type row) 'standard) row))
+	      info 'first-match)
+           'table-cell
+           (lambda (cell)
+             (setq column-format (format "%s-|" column-format)))
+         info)
+       (format "%s\n%s" column-format contents)))))
+
+(defun org-pandoc-table-row (table-row contents info)
+  (org-element-put-property table-row :post-blank nil)
+  (case (org-element-property :type table-row)
+    (rule "")
+    (t (format "| %s" contents))))
+
+(defun org-pandoc-table-cell (table-cell contents info)
+    (format "%s | " contents))
 
 (defun org-pandoc-export-as-pandoc (&optional async subtreep visible-only)
   (interactive)
