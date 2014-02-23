@@ -1,0 +1,32 @@
+#+TITLE: Test file
+#+KEYWORDS: cat1 cat2
+#+AUTHOR: Jane Doe
+#+DATE : 2014-01-21
+#+OPTIONS: toc:t
+* Test org
+‹In the 1920s [1920-01-01], government switch from promoting railroads to promoting
+automobiles. By the end of the 1930s [1939-01-01], gasoline for autos dominated the
+oil market.› [@sabin:2000petroleum, p. 13]
+
+#+BEGIN_SRC calc
+1 + 1
+#+END_SRC
+
+#+RESULTS:
+: 2
+
+
+| Name  | Phone | Age |
+|-------+-------+-----|
+| Peter |  1234 |  17 |
+| Anna  |  4321 |  25 |
+
+** list
+- uno
+- dos
+- tres
+
+** ordered list
+1. uno
+2. due
+3. tre
