@@ -297,7 +297,7 @@ Use the :pandoc-output-format propery to specify an output
 format, a symbol corresponding with a valid pandoc output format
 name. If not specified, markdown will be used."
   (let* ((output-format (plist-get plist :pandoc-output-format))
-         (file-ext (org-pandoc-output-file-extension output-format nil pub-dir))
+         (file-ext (org-pandoc-output-file-extension output-format))
          (process (org-pandoc-process-function output-format)))
     (org-publish-attachment
      plist
